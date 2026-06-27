@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2次関数 最大・最小問題ジェネレーター</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- 外部カスタムスタイル -->
+    <link rel="stylesheet" href="src/style.css">
+</head>
+
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <!-- ヘッダー -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2 flex items-center justify-center gap-2">
+                <i data-lucide="line-chart" class="text-indigo-600 w-8 h-8 md:w-10 md:h-10"></i>
+                2次関数の最大・最小 練習問題生成
+            </h1>
+            <p class="text-slate-600 max-w-2xl mx-auto text-sm md:text-base">
+                「2次関数の最大・最小」の4大パターンを学習しましょう。ランダムに作成される式から平方完成を頭で描き、スライダーでグラフを動かして解答を確認できます。
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- コントロール・問題提示エリア (左側) -->
+            <div class="lg:col-span-5 flex flex-col gap-6">
+                <!-- パターン選択カード -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                    <h2 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="layers" class="text-indigo-500 w-5 h-5"></i>
+                        パターンの選択
+                    </h2>
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <button id="btn-fixed"
+                            class="pattern-btn p-3 rounded-xl border text-left transition-all duration-200 hover:border-indigo-200">
+                            <span class="block font-medium text-sm text-slate-900">1. 固定</span>
+                            <span class="block text-xs text-slate-500 mt-1">数値がすべて固定</span>
+                        </button>
+                        <button id="btn-axis"
+                            class="pattern-btn p-3 rounded-xl border text-left transition-all duration-200 hover:border-indigo-200">
+                            <span class="block font-medium text-sm text-slate-900">2. 軸移動</span>
+                            <span class="block text-xs text-slate-500 mt-1">軸が文字aで動く</span>
+                        </button>
+                        <button id="btn-range"
+                            class="pattern-btn p-3 rounded-xl border text-left transition-all duration-200 hover:border-indigo-200">
+                            <span class="block font-medium text-sm text-slate-900">3. 範囲移動</span>
+                            <span class="block text-xs text-slate-500 mt-1">範囲の片端aが動く</span>
+                        </button>
+                        <button id="btn-width"
+                            class="pattern-btn p-3 rounded-xl border text-left transition-all duration-200 hover:border-indigo-200">
+                            <span class="block font-medium text-sm text-slate-900">4. 幅移動</span>
+                            <span class="block text-xs text-slate-500 mt-1">幅一定でaが動く</span>
+                        </button>
+                    </div>
+
+                    <button id="btn-generate"
+                        class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-all duration-200 shadow-md shadow-indigo-100 flex items-center justify-center gap-2">
+                        <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                        問題を生成する
+                    </button>
+                </div>
+
+                <!-- 問題文カード -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex-grow">
+                    <span
+                        class="inline-block px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-full mb-3"
+                        id="pattern-badge">
+                        パターン
+                    </span>
+                    <h2 class="text-xl font-bold text-slate-900 mb-4">問題</h2>
+                    <div id="question-text" class="text-lg leading-relaxed text-slate-800 mb-6 min-h-[80px]">
+                        <!-- 問題文がJavaScriptから挿入されます -->
+                    </div>
+                    <div class="flex gap-3">
+                        <button id="btn-toggle-answer"
+                            class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2">
+                            <i data-lucide="eye" class="w-5 h-5" id="answer-icon"></i>
+                            <span id="answer-btn-text">解答を表示</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- グラフ・可視化エリア (右側) -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+                <!-- グラフカード -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="activity" class="text-rose-500 w-5 h-5"></i>
+                            グラフビジュアライザ
+                        </h2>
+                        <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded" id="convexity-badge">形状:
+                            下に凸</span>
+                    </div>
+
+                    <!-- Canvas -->
+                    <div
+                        class="relative bg-slate-950 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center">
+                        <canvas id="graphCanvas" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <!-- パラメータ調整スライダー (文字変数が存在する場合のみ表示) -->
+                    <div id="parameter-control" class="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-semibold text-sm text-slate-700 flex items-center gap-1.5">
+                                <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                                変数 <span id="param-name" class="font-bold">a</span> の値を動かしてみよう：
+                            </span>
+                            <span id="param-display" class="text-lg font-bold text-indigo-600 font-mono">a = 0.0</span>
+                        </div>
+                        <input type="range" id="param-slider" min="-5" max="10" step="0.1" value="2"
+                            class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        <div class="flex justify-between text-xs text-slate-400 mt-1 font-mono">
+                            <span id="slider-min">-5.0</span>
+                            <span id="slider-max">10.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 解答のまとめセクション -->
+        <div id="answer-section" class="hidden mt-8 transition-all duration-300">
+            <div class="bg-slate-900 text-slate-100 rounded-2xl p-6 md:p-8 shadow-sm">
+                <div class="flex items-center gap-2 mb-6 border-b border-slate-800 pb-4">
+                    <i data-lucide="check-square" class="text-emerald-400 w-6 h-6"></i>
+                    <h2 class="text-2xl font-bold text-slate-100">解答のまとめ</h2>
+                </div>
+                <div id="summary-solution" class="space-y-6 overflow-x-auto text-sm md:text-base">
+                    <!-- ここに解答が入ります -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- モジュールとしてメインJavaScriptを読み込む -->
+    <script type="module" src="src/main.js"></script>
+</body>
+
+</html>

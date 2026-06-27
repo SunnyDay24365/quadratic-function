@@ -1,0 +1,17 @@
+/* 独自のWebフォント設定とスタイル微調整 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+body {
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* スライダーのつまみの色変更やカスタムスタイルが必要な場合のみここに追記 */
+input[type="range"]::-webkit-slider-thumb {
+    transition: transform 0.1s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+    transform: scale(1.2);
+}
