@@ -1,4 +1,4 @@
-import { expandAFormula } from './mathUtils.js';
+import { expandAFormula, formatNum } from './mathUtils.js';
 
 /**
  * 軸が動くタイプの解答HTMLを生成
@@ -45,7 +45,7 @@ export function buildAxisSolutionHTML(questionData) {
 `;
 }
 
-import { expandAFormula } from './mathUtils.js';
+/**import { expandAFormula } from './mathUtils.js';**/
 
 /**
  * 定義域の片側が動くタイプの解答HTMLを生成
@@ -165,7 +165,7 @@ export function buildFixedSolutionHTML(questionData) {
         `;
 }
 
-import { expandAFormula, formatNum } from './mathUtils.js';
+/**import { expandAFormula, formatNum } from './mathUtils.js';**/
 
 /**
  * 定義域の幅が一定で動くタイプの解答HTMLを生成
@@ -216,10 +216,10 @@ export function buildWidthSolutionHTML(questionData) {
 `;
 }
 
-import { buildFixedSolutionHTML } from './fixedSolution.js';
+/**import { buildFixedSolutionHTML } from './fixedSolution.js';
 import { buildAxisSolutionHTML } from './axisSolution.js';
 import { buildRangeSolutionHTML } from './rangeSolution.js';
-import { buildWidthSolutionHTML } from './widthSolution.js';
+import { buildWidthSolutionHTML } from './widthSolution.js';**/
 
 /**
  * 渡された問題データに基づき、適切な解答HTML生成関数を呼び出します。
